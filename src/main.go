@@ -26,7 +26,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("../templates/", http.StripPrefix("../templates/", http.FileServer(http.Dir("../templates/css"))))
 
-	mux.Handle("/", handlers.Middleware(env.MainHandler()))
-	mux.Handle("/registration", handlers.Middleware(env.RegHandler()))
+	mux.Handle("/", env.Middleware(env.MainHandler()))
+	mux.Handle("/registration", env.Middleware(env.RegHandler()))
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }

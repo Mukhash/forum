@@ -1,4 +1,3 @@
-{{define "home"}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,18 +15,18 @@
         <a href="/" id="main-page">
             <h1>Forum</h1>
         </a>
-        {{ if not .User.Authorized }}
+        {{ if not .User.Authenticated }}
         <a href="/login" id="login">Log In</a> {{ else }}
         <a href="/login" id="login">Log Out</a> {{ end }}
     </nav>
 
     <div class="feed">
         <div class="feed-top">
-            <h2> Welcome, {{ .User.Username}}! </h2>
+            <h2> Welcome, {{ .User.Name}}! </h2>
 
             <form class="filter" action="/home" method="GET">
                 <select name="filter">
-                    {{ if .User.Authorized }}
+                    {{ if .User.Authenticated }}
                     <option value="favourites"> favourites </option>
                     <option value="my-posts"> my posts </option>
                     {{ end }}
@@ -43,12 +42,12 @@
         </div>
 
 
-        {{ if .User.Authorized }}
+        {{ if .User.Authenticated }}
         <div class="create-post">
             <form action="/post/" method="POST">
                 <textarea name="text" id="input-post" placeholder="Create post..." required></textarea>
 
-                <div class="categories">
+                <!-- <div class="categories">
                     <button id="send" type="submit"> Submit </button>
 
                     <div class="category-checkbox">
@@ -56,12 +55,12 @@
                         <label><input type="checkbox" name="category" value="{{.ID}}"> {{.Name}}</label>
                         {{ end }}
                     </div>
-                </div>
+                </div> -->
             </form>
         </div>
         {{ end }}
 
-        {{ range .Posts }}
+        <!-- {{ range .Posts }}
         <a href="post/{{ .ID }}">
             <div class="post" id="{{.ID}}">
 
@@ -101,9 +100,8 @@
                 </div>
             </div>
         </a>
-        {{ end }}
+        {{ end }} -->
     </div>
 </body>
 
 </html>
-{{end}}

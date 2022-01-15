@@ -1,41 +1,29 @@
 package db
 
-const (
-	Users        = "users"
-	Sessions     = "auth_sessions"
-	Posts        = "posts"
-	Categories   = "categories"
-	PostCategory = "post_category"
-	Comments     = "comments"
-	RateType     = "rate_type"
-	ObjType      = "obj_type"
-	Likes        = "rates"
-)
-
 func getQuery() []string {
 	return []string{
-		`CREATE TABLE  IF NOT EXISTS  (
+		`CREATE TABLE  IF NOT EXISTS "users" (
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
-			"username"	TEXT UNIQUE,
-			"password"	TEXT
-			"email"	TEXT UNIQUE,
+			"name"	TEXT UNIQUE,
+			"password"	TEXT,
+			"email"	TEXT UNIQUE
 		)`,
 
 		`CREATE TABLE  IF NOT EXISTS "auth_sessions" (
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
-			"uid"	INTEGER,
-			"uuid"	TEXT UNIQUE,
+			"user_id"	INTEGER,
+			"cookie_value"	TEXT UNIQUE,
 			"status"	INTEGER DEFAULT 0,
-			"datetime"	DATETIME,
-			FOREIGN KEY ("uid") REFERENCES users ("id") ON DELETE CASCADE
+			"dateto"	DATETIME,
+			FOREIGN KEY ("user_id") REFERENCES users ("id") ON DELETE CASCADE
 		)`,
 
 		`CREATE TABLE  IF NOT EXISTS "posts" (
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
-			"uid"	INTEGER,
+			"user_id"	INTEGER,
 			"text"	TEXT,
 			"datefrom"	DATETIME,
-			FOREIGN KEY ("uid") REFERENCES users ("id") ON DELETE CASCADE
+			FOREIGN KEY ("user_id") REFERENCES users ("id") ON DELETE CASCADE
 		)`,
 
 		`CREATE TABLE	IF NOT EXISTS "categories" (

@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"os"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -23,7 +24,7 @@ func ConnectBD() (*sql.DB, error) {
 	for _, query := range getQuery() {
 		_, err := forumDB.Exec(query)
 		if err != nil {
-			return nil, err
+			return nil, errors.New(err.Error() + " here")
 		}
 	}
 
