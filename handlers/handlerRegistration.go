@@ -8,6 +8,7 @@ import (
 	"time"
 
 	uuid "github.com/satori/go.uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const insertUserErrorText = "Username or email already exists"
@@ -20,10 +21,19 @@ func (env *env) RegHandler() http.Handler {
 		case http.MethodPost:
 			newUser := models.User{}
 			defer r.Body.Close()
-			newUser.InitUser(r)
+
+			if err := newUser.InitUser(r); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+			if err := newUser.IsValid(); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+
+			hashedPass, _ := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.MinCost)
+			newUser.Password = string(hashedPass)
 
 			if err := db.InsertUser(env.db, &newUser); err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				http.Error(w, insertUserErrorText, http.StatusBadRequest)
 			}
 
 			uuid := uuid.NewV4()
