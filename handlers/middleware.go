@@ -4,18 +4,18 @@ import (
 	"context"
 	"forum/db"
 	"forum/models"
+	"forum/utils"
 	"net/http"
 )
 
 type ctxKey int
 
 const ctxUserKey ctxKey = iota
-const cookieName = "auth_session"
 
 func (env *env) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user := &models.User{Name: "Guest"}
-		cookie, err := r.Cookie(cookieName)
+		cookie, err := r.Cookie(utils.CookieName)
 		if err != http.ErrNoCookie {
 			user, _ = db.FindUserBySession(env.db, cookie.Value)
 		}

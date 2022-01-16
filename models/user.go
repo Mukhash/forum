@@ -15,20 +15,21 @@ type User struct {
 }
 
 func (u *User) InitUser(r *http.Request) error {
-	if r.FormValue("email") == "" {
+	formVal := r.PostFormValue("email")
+	if formVal == "" {
 		return errors.New(http.StatusText(http.StatusBadRequest))
 	}
-	u.Email = r.FormValue("email")
+	u.Email = formVal
 
-	if r.FormValue("username") == "" {
+	if formVal = r.PostFormValue("username"); formVal == "" {
 		return errors.New(http.StatusText(http.StatusBadRequest))
 	}
-	u.Name = r.FormValue("username")
+	u.Name = formVal
 
-	if r.FormValue("password") == "" {
+	if formVal = r.PostFormValue("password"); formVal == "" {
 		return errors.New(http.StatusText(http.StatusBadRequest))
 	}
-	u.Password = r.FormValue("password")
+	u.Password = formVal
 	return nil
 }
 

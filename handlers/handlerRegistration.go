@@ -5,9 +5,7 @@ import (
 	"forum/models"
 	"forum/utils"
 	"net/http"
-	"time"
 
-	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -36,14 +34,12 @@ func (env *env) RegHandler() http.Handler {
 				http.Error(w, insertUserErrorText, http.StatusBadRequest)
 			}
 
-			uuid := uuid.NewV4()
-			dateto := time.Now().Add(time.Duration(7 * 24 * time.Hour))
-			cookie := http.Cookie{Name: cookieName, Value: uuid.String(), Expires: dateto}
-			if err := db.InsertCookie(env.db, &cookie, newUser.ID); err != nil {
+			cookie := utils.CreateCookie()
+			if err := db.InsertCookie(env.db, cookie, newUser.ID); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 
-			http.SetCookie(w, &cookie)
+			http.SetCookie(w, cookie)
 
 			http.Redirect(w, r, "/", http.StatusFound)
 		default:

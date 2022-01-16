@@ -3,6 +3,8 @@ package db
 import (
 	"database/sql"
 	"forum/models"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // InsertUser inserts newly created user into users table in forum db.
@@ -51,4 +53,16 @@ func FindUserBySession(db *sql.DB, cookieValue string) (*models.User, error) {
 		}
 	}
 	return &user, err
+}
+
+func FindUserByEmail(db *sql.DB, email string, password string) (*models.User, error) {
+	user := &models.User{}
+	query := "select id, name, password from users where email = ?"
+	err := db.QueryRow(query, email).Scan(&user.ID, &user.Name, &user.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	return user, err
 }
