@@ -26,11 +26,6 @@ func getQuery() []string {
 			FOREIGN KEY ("user_id") REFERENCES users ("id") ON DELETE CASCADE
 		)`,
 
-		`CREATE TABLE	IF NOT EXISTS "categories" (
-			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
-			"name"	TEXT UNIQUE
-		)`,
-
 		`CREATE TABLE  IF NOT EXISTS "post_category" (
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
 			"post_id"	INTEGER,
@@ -43,11 +38,11 @@ func getQuery() []string {
 		`CREATE TABLE  IF NOT EXISTS "comments" (
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
 			"post_id"	INTEGER,
-			"uid"	INTEGER,
+			"user_id"	INTEGER,
 			"text"	TEXT,
 			"creation_date"	DATETIME,
 			FOREIGN KEY ("post_id") REFERENCES posts ("id") ON DELETE CASCADE
-			FOREIGN KEY ("uid") REFERENCES users ("id") ON DELETE CASCADE
+			FOREIGN KEY ("user_id") REFERENCES users ("id") ON DELETE CASCADE
 		)`,
 
 		`CREATE TABLE  IF NOT EXISTS "rate_type" (

@@ -29,6 +29,8 @@ func main() {
 	mux.Handle("/", env.Middleware(env.MainHandler()))
 	mux.Handle("/registration", env.Middleware(env.RegHandler()))
 	mux.Handle("/login", env.Middleware(env.LogHandler()))
+	mux.Handle("/post/", env.Middleware(env.PostHandler()))
+
 	mux.HandleFunc("/single_sign_on", env.HandleSignOn)
 	mux.HandleFunc("/reg_sign_on", env.HandleRegSignOn)
 	log.Fatal(http.ListenAndServe(":8080", mux))

@@ -23,22 +23,6 @@
     <div class="feed">
         <div class="feed-top">
             <h2> Welcome, {{ .User.Name}}! </h2>
-
-            <form class="filter" action="/home" method="GET">
-                <select name="filter">
-                    {{ if .User.Authenticated }}
-                    <option value="favourites"> favourites </option>
-                    <option value="my-posts"> my posts </option>
-                    {{ end }}
-
-                    {{ range .Categories }}
-                    <option value="{{.ID}}"> {{.Name}}</option>
-                    {{ end }}
-                    
-                </select>
-                <button id="send" type="submit"> Filter </button>
-            </form>
-
         </div>
 
 
@@ -46,40 +30,29 @@
         <div class="create-post">
             <form action="/post/" method="POST">
                 <textarea name="text" id="input-post" placeholder="Create post..." required></textarea>
-
-                <!-- <div class="categories">
-                    <button id="send" type="submit"> Submit </button>
-
-                    <div class="category-checkbox">
-                        {{ range .Categories }}
-                        <label><input type="checkbox" name="category" value="{{.ID}}"> {{.Name}}</label>
-                        {{ end }}
-                    </div>
-                </div> -->
             </form>
         </div>
         {{ end }}
 
-        <!-- {{ range .Posts }}
+        {{ range .Posts }}
         <a href="post/{{ .ID }}">
             <div class="post" id="{{.ID}}">
 
                 <div class="post-header">
                     <div>
-                        <span> <b>{{ .Author }} </b></span>
+                        <span> <b>{{ .Username }} </b></span>
                         <span>·</span>
-                        <span>{{ .CategoryName }}</span>
                     </div>
-                    <time> {{ .CreationDate.Format "02-Jan 15:04" }}</time>
+                    <time> {{ .Datefrom.Format "02-Jan 15:04" }}</time>
                 </div>
 
-                <pre>{{ .Text }}</pre>
+                <pre>{{ .Body }}</pre>
 
                 <div class="post-bottom">
 
                     <div>
                         <span style="color: #518fa1;"> 🗩 </span>
-                        <span> {{ .Comments }} </span>
+                        <span> {{ .CommentsCount }} </span>
                     </div>
 
                     <form class="post-rating" action="/like" method="POST">
@@ -90,7 +63,7 @@
                             style="background-color: #CDF2CA;" {{ end }}> ⮝
                         </button>
 
-                        <span class="rating"> {{ .Rating }} </span>
+                        <span class="rating"> {{ .LikesCount }} </span>
 
                         <button class="rateButton" type="submit" name="action" value="2" {{ if eq .UserRate 2 }}
                             style="background-color: #FFDEFA;" {{ end }}> ⮟
@@ -100,7 +73,7 @@
                 </div>
             </div>
         </a>
-        {{ end }} -->
+        {{ end }}
     </div>
 </body>
 
