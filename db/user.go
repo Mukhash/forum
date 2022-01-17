@@ -9,10 +9,9 @@ import (
 
 // InsertUser inserts newly created user into users table in forum db.
 func InsertUser(db *sql.DB, user *models.User) error {
-	var password string
 	res, err := db.Exec(
 		"INSERT INTO users (name,email,password) VALUES(?,?,?)",
-		user.Name, user.Email, string(password),
+		user.Name, user.Email, string(user.Password),
 	)
 	if err != nil {
 		return err

@@ -27,7 +27,7 @@ func (env *env) RegHandler() http.Handler {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 			}
 
-			hashedPass, _ := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.MinCost)
+			hashedPass, _ := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
 			newUser.Password = string(hashedPass)
 
 			if err := db.InsertUser(env.db, &newUser); err != nil {
