@@ -24,10 +24,12 @@ func main() {
 	env.SetDB(db)
 
 	mux := http.NewServeMux()
-	mux.Handle("../templates/", http.StripPrefix("../templates/", http.FileServer(http.Dir("../templates/css"))))
+	//mux.Handle("../templates/", http.StripPrefix("../templates/", http.FileServer(http.Dir("../templates/css"))))
 
 	mux.Handle("/", env.Middleware(env.MainHandler()))
 	mux.Handle("/registration", env.Middleware(env.RegHandler()))
 	mux.Handle("/login", env.Middleware(env.LogHandler()))
+	mux.HandleFunc("/single_sign_on", env.HandleSignOn)
+	mux.HandleFunc("/reg_sign_on", env.HandleRegSignOn)
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }

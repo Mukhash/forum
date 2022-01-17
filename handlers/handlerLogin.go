@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"forum/db"
 	"forum/models"
 	"forum/utils"
@@ -10,17 +9,18 @@ import (
 
 func (env *env) LogHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user := r.Context().Value(ctxUserKey).(*models.User)
 		switch r.Method {
 		case http.MethodGet:
-			user := r.Context().Value(ctxUserKey).(*models.User)
-			if user.Authenticated {
-				http.Redirect(w, r, "/", http.StatusFound)
-			}
 			utils.RenderTemplate(w, env.tmpl, "login", user)
 		case http.MethodPost:
+			if user.Authenticated {
+				http.Redirect(w, r, "/single_sign_on", http.StatusFound)
+				return
+			}
 			pass := r.PostFormValue("password")
 			login := r.PostFormValue("username")
-			fmt.Println(login)
+
 			if pass == "" || login == "" {
 				http.Error(w, "No pass or login", http.StatusBadRequest)
 			}
@@ -29,8 +29,6 @@ func (env *env) LogHandler() http.Handler {
 			if err != nil {
 				http.Error(w, "Incorrect username or password", http.StatusUnauthorized)
 			}
-			fmt.Println(user)
-			fmt.Println(err)
 
 			cookie := utils.CreateCookie()
 			if err = db.InsertCookie(env.db, cookie, user.ID); err != nil {

@@ -15,6 +15,12 @@ func (env *env) RegHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
+			user := r.Context().Value(ctxUserKey).(*models.User)
+			if user.Authenticated {
+				http.Redirect(w, r, "/reg_sign_on", http.StatusFound)
+				return
+			}
+
 			utils.RenderTemplate(w, env.tmpl, "register", nil)
 		case http.MethodPost:
 			newUser := models.User{}
