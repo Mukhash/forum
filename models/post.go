@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Post struct {
-	ID            int
+	ID            int64
 	UserID        int
 	Username      string
 	Body          string

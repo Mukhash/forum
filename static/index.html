@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="#" />
+    <title>Forum</title>
+</head>
+
+<body>
+    <nav class="navigation-header">
+        <a href="/" id="main-page">
+            <h1>Forum</h1>
+        </a>
+        {{ if not .User.Authenticated }}
+        <a href="/registration" id="login">Sign Up</a>
+        <a href="/login" id="login">Log In</a> {{ else }}
+        <a href="/login" id="login">Log Out</a> {{ end }}
+    </nav>
+
+    <div class="feed">
+        <div class="feed-top">
+            <h2> Welcome, {{ .User.Name}}! </h2>
+        </div>
+
+        <div class="create-post">
+            <form action="/post/" method="POST">
+                <textarea name="body" id="input-post" placeholder="Create post..." required></textarea>
+            </form>
+        </div>
+
+        {{ range .Posts }}
+        <a href="post/{{ .ID }}">
+            <div class="post" id="{{.ID}}">
+
+                <div class="post-header">
+                    <div>
+                        <span> <b>{{ .Username }} </b></span>
+                        <span>·</span>
+                    </div>
+                    <time> {{ .Datefrom.Format "02-Jan 15:04" }}</time>
+                </div>
+
+                <pre>{{ .Body }}</pre>
+
+                <div class="post-bottom">
+
+                    <div>
+                        <span style="color: #518fa1;"> 🗩 </span>
+                        <span> {{ .CommentsCount }} </span>
+                    </div>
+
+                    <form class="post-rating" action="/like" method="POST">
+                        <input name="objType" value="1" type="hidden">
+                        <input name="objID" value="{{ .ID }}" type="hidden">
+
+                        <button class="rateButton" type="submit" name="action" value="1" {{ if eq .UserRate 1 }}
+                            style="background-color: #CDF2CA;" {{ end }}> ⮝
+                        </button>
+
+                        <span class="rating"> {{ .LikesCount }} </span>
+
+                        <button class="rateButton" type="submit" name="action" value="2" {{ if eq .UserRate 2 }}
+                            style="background-color: #FFDEFA;" {{ end }}> ⮟
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </a>
+        {{ end }}
+    </div>
+</body>
+
+</html>

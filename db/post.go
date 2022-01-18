@@ -27,21 +27,26 @@ func GetPosts(db *sql.DB) (*[]models.Post, error) {
 	return posts, nil
 }
 
-func CreatePost(db *sql.DB, post *models.Post) error {
+func CreatePost(db *sql.DB, post *models.Post) (int64, error) {
 	tx, err := db.Begin()
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	defer tx.Rollback()
 
-	_, err = tx.Exec(
+	res, err := tx.Exec(
 		"INSERT INTO posts (user_id, body, creation_date) VALUES(?, ?, ?)",
 		post.UserID, post.Body, post.Datefrom,
 	)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
-	return tx.Commit()
+	postID, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return postID, tx.Commit()
 }
