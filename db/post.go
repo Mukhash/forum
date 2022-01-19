@@ -8,7 +8,7 @@ import (
 func GetPosts(db *sql.DB) (*[]models.Post, error) {
 	posts := &[]models.Post{}
 
-	query := "select id, user_id, text, datefrom from posts order by datefrom DESC limit 1000"
+	query := "select id, user_id, body, datefrom from posts order by datefrom DESC limit 1000"
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
@@ -27,26 +27,30 @@ func GetPosts(db *sql.DB) (*[]models.Post, error) {
 	return posts, nil
 }
 
-func CreatePost(db *sql.DB, post *models.Post) (int64, error) {
+func CreatePost(db *sql.DB, post *models.Post) error {
 	tx, err := db.Begin()
 	if err != nil {
-		return -1, err
+		return err
 	}
 
 	defer tx.Rollback()
 
 	res, err := tx.Exec(
-		"INSERT INTO posts (user_id, body, creation_date) VALUES(?, ?, ?)",
+		"INSERT INTO posts (user_id, body, datefrom) VALUES(?, ?, ?)",
 		post.UserID, post.Body, post.Datefrom,
 	)
 	if err != nil {
-		return -1, err
+		return err
 	}
 
-	postID, err := res.LastInsertId()
+	_, err = res.LastInsertId()
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return postID, tx.Commit()
+	return tx.Commit()
 }
+
+// func GetNextPosts(page, limit int) (*[]models.Post, error) {
+
+// }

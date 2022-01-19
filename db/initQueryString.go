@@ -21,7 +21,7 @@ func getQuery() []string {
 		`CREATE TABLE  IF NOT EXISTS "posts" (
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
 			"user_id"	INTEGER,
-			"text"	TEXT,
+			"body"	TEXT,
 			"datefrom"	DATETIME,
 			FOREIGN KEY ("user_id") REFERENCES users ("id") ON DELETE CASCADE
 		)`,

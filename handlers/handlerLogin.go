@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"forum/db"
 	"forum/models"
 	"forum/utils"
@@ -26,8 +27,10 @@ func (env *env) LogHandler() http.Handler {
 			}
 
 			user, err := db.FindUserByEmail(env.db, login, pass)
+			fmt.Println(err)
 			if err != nil {
 				http.Error(w, "Incorrect username or password", http.StatusUnauthorized)
+				return
 			}
 
 			cookie := utils.CreateCookie()
