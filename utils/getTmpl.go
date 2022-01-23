@@ -3,7 +3,7 @@ package utils
 import "text/template"
 
 func GetTmpl() (*template.Template, error) {
-	tmpl, err := template.ParseGlob("./static/*.html")
+	tmpl, err := template.ParseGlob("./static/templates/*.html")
 	if err != nil {
 		return nil, err
 	}
