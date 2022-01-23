@@ -11,3 +11,8 @@ type Post struct {
 	LikesCount    int
 	CommentsCount int
 }
+
+type PostFeed struct {
+	Posts       *[]Post `json:"data"`
+	NextFirstId int64   `json:"nextFirstId"`
+}

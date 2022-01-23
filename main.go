@@ -25,11 +25,14 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/css"))))
+	mux.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./static/js"))))
 
 	mux.Handle("/", env.Middleware(env.MainHandler()))
 	mux.Handle("/registration", env.Middleware(env.RegHandler()))
 	mux.Handle("/login", env.Middleware(env.LogHandler()))
 	mux.Handle("/post/", env.Middleware(env.PostHandler()))
+	mux.Handle("/test_posts", env.NextPostsHandler())
+	mux.Handle("/test_index", env.TestIndexHandler())
 
 	mux.HandleFunc("/single_sign_on", env.HandleSignOn)
 	mux.HandleFunc("/reg_sign_on", env.HandleRegSignOn)

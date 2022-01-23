@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/navigation.css">
+    <link rel="shortcut icon" href="#" />
+    <title>Forum</title>
+</head>
+
+<body>
+    <nav class="navigation-header">
+        <a href="/" id="main-page">
+            <h1>Forum</h1>
+        </a>
+        {{ if not .User.Authenticated }}
+        <a href="/registration" id="login">Sign Up</a>
+        <a href="/login" id="login">Log In</a> {{ else }}
+        <a href="/login" id="login">Log Out</a> {{ end }}
+    </nav>
+
+    <div class="feed">
+        <div class="feed-top">
+            <h2> Welcome, {{ .User.Name}}! </h2>
+        </div>
+
+        <div class="create-post">
+            <form action="/post/" method="POST">
+                <textarea name="body" id="input-post" placeholder="Create post..." required></textarea>
+                <button id="send" type="submit"> Submit </button>
+            </form>
+        </div>
+
+        <div class="posts_feed"> 
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -51,6 +51,39 @@ func CreatePost(db *sql.DB, post *models.Post) error {
 	return tx.Commit()
 }
 
-// func GetNextPosts(page, limit int) (*[]models.Post, error) {
+func GetNextPosts(db *sql.DB, firstID, limit int) (*[]models.Post, error) {
+	posts := &[]models.Post{}
+	queryWhere :=
+		`SELECT id, user_id, body, datefrom FROM posts
+		WHERE id <= ?
+		ORDER BY datefrom DESC
+		LIMIT ?`
+	queryAll :=
+		`SELECT id, user_id, body, datefrom FROM posts
+		ORDER BY datefrom DESC
+		LIMIT ?`
 
-// }
+	query := queryWhere
+	args := []interface{}{firstID, limit}
+	if firstID == -1 {
+		query = queryAll
+		args = []interface{}{limit}
+	}
+
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var post models.Post
+		err := rows.Scan(&post.ID, &post.UserID, &post.Body, &post.Datefrom)
+		if err != nil {
+			return nil, err
+		}
+		*posts = append(*posts, post)
+	}
+
+	return posts, err
+}
