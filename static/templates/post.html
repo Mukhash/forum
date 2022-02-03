@@ -61,10 +61,10 @@
         {{ if .User.Authenticated }}
         <div class="create-comment">
             <form action="/comment/" method="POST">
-                <textarea name="text" id="input-comment" placeholder="Create comment..." required></textarea>
-                <input name="postID" value="{{.Post.ID}}" type="hidden">
+                <textarea name="body" id="input-comment" placeholder="Create comment..." required></textarea>
+                <input name="post_id" value="{{.Post.ID}}" type="hidden">
                 <p>
-                    <button id="send" type="submit"> Submit </button>
+                    <button id="send" type="submit"> Reply </button>
                 </p>
             </form>
         </div>

@@ -36,6 +36,7 @@ func main() {
 	mux.Handle("/post/", env.Middleware(env.PostHandler()))
 	mux.Handle("/next_posts", env.NextPostsHandler())
 	mux.Handle("/test_index", env.TestIndexHandler())
+	mux.Handle("/comment", env.Middleware(env.CommentHandler()))
 
 	mux.HandleFunc("/single_sign_on", env.HandleSignOn)
 	mux.HandleFunc("/reg_sign_on", env.HandleRegSignOn)

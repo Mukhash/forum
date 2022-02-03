@@ -42,3 +42,12 @@ func GetComments(db *sql.DB, post_id, firstID, limit int) (*[]models.Comment, er
 	}
 	return &comments, nil
 }
+
+func InsertComment(db *sql.DB, comment *models.Comment) error {
+	_, err := db.Exec(
+		`INSERT INTO comments 
+		(post_id, user_id, body, datefrom)
+		VALUES(?,?,?,?)`,
+		comment.PostID, comment.UserID, comment.Body, comment.Datefrom)
+	return err
+}
