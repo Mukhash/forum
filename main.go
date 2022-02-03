@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"forum/db"
 	"forum/handlers"
 	"forum/utils"
@@ -17,11 +18,13 @@ func main() {
 	}
 	env.SetTmpl(tmpl)
 
-	db, err := db.ConnectBD()
+	database, err := db.ConnectBD()
 	if err != nil {
 		log.Fatal(err)
 	}
-	env.SetDB(db)
+	db.FillDatabase(database)
+	fmt.Println("Connected to database...")
+	env.SetDB(database)
 
 	mux := http.NewServeMux()
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/css"))))
@@ -31,7 +34,7 @@ func main() {
 	mux.Handle("/registration", env.Middleware(env.RegHandler()))
 	mux.Handle("/login", env.Middleware(env.LogHandler()))
 	mux.Handle("/post/", env.Middleware(env.PostHandler()))
-	mux.Handle("/test_posts", env.NextPostsHandler())
+	mux.Handle("/next_posts", env.NextPostsHandler())
 	mux.Handle("/test_index", env.TestIndexHandler())
 
 	mux.HandleFunc("/single_sign_on", env.HandleSignOn)

@@ -9,9 +9,13 @@ import (
 
 // InsertUser inserts newly created user into users table in forum db.
 func InsertUser(db *sql.DB, user *models.User) error {
+	cryptedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
 	res, err := db.Exec(
 		"INSERT INTO users (name,email,password) VALUES(?,?,?)",
-		user.Name, user.Email, string(user.Password),
+		user.Name, user.Email, string(cryptedPassword),
 	)
 	if err != nil {
 		return err

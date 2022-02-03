@@ -5,9 +5,9 @@ import (
 	"forum/models"
 )
 
-func GetComments(db *sql.DB, post_id, firstID, limit int) (*[]models.Commment, error) {
+func GetComments(db *sql.DB, post_id, firstID, limit int) (*[]models.Comment, error) {
 
-	comments := []models.Commment{}
+	comments := []models.Comment{}
 	queryWhere :=
 		`SELECT id, post_id, user_id, body, datefrom FROM comments
 		WHERE id <= ?
@@ -32,7 +32,7 @@ func GetComments(db *sql.DB, post_id, firstID, limit int) (*[]models.Commment, e
 	defer rows.Close()
 
 	for rows.Next() {
-		comment := models.Commment{}
+		comment := models.Comment{}
 		err := rows.Scan(&comment.ID, &comment.UserID, &comment.Body, &comment.Datefrom)
 		if err != nil {
 			return nil, err

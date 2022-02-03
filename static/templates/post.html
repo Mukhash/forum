@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/navigation.css">
+    <link rel="shortcut icon" href="#" />
+
+    <title>Forum</title>
+</head>
+
+<body>
+    <nav class="navigation-header">
+        <a href="/" id="main-page">
+            <h1>Forum</h1>
+        </a>
+        {{ if not .User.Authenticated }}
+        <a href="/login" id="login">Log In</a> {{ else }}
+        <a href="/login" id="login">Log Out</a> {{ end }}
+    </nav>
+
+    <div class="feed">
+        <div class="post">
+            <div class="post-header">
+            <div>
+                <span> <b> {{ .Post.Username }} </b></span>
+                <span>·</span>
+
+            </div>
+                <time> {{ .Post.Datefrom.Format "02-Jan 15:04" }}</time>
+            </div>
+
+            <pre>{{ .Post.Body }}</pre>
+
+            <div class="post-bottom">
+                <div>
+                    <span style="color: #518fa1;"> 🗩 </span>
+                    <span> {{ .Post.CommentsCount }} </span>
+                </div>
+
+                <form class="post-rating" action="/like" method="POST">
+                    <input name="objType" value="1" type="hidden">
+                    <input name="objID" value="{{ .Post.ID }}" type="hidden">
+
+                    <button class="rateButton" type="submit" name="action" value="1" {{ if eq .Post.UserRate 1 }}
+                        style="background-color: #CDF2CA;" {{ end }}> ⮝
+                    </button>
+
+                    <span class="rating"> {{ .Post.LikesCount }} </span>
+
+                    <button class="rateButton" type="submit" name="action" value="2" {{ if eq .Post.UserRate 2 }}
+                        style="background-color: #FFDEFA;" {{ end }}> ⮟
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+        {{ if .User.Authenticated }}
+        <div class="create-comment">
+            <form action="/comment/" method="POST">
+                <textarea name="text" id="input-comment" placeholder="Create comment..." required></textarea>
+                <input name="postID" value="{{.Post.ID}}" type="hidden">
+                <p>
+                    <button id="send" type="submit"> Submit </button>
+                </p>
+            </form>
+        </div>
+        {{ end }}
+
+        <div class="comments">
+            <span> Comments: </span>
+        </div>
+
+    </div>
+    <script src="js/comments.js"></script>
+</body>
+
+</html>

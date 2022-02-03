@@ -54,12 +54,22 @@ func CreatePost(db *sql.DB, post *models.Post) error {
 func GetNextPosts(db *sql.DB, firstID, limit int) (*[]models.Post, error) {
 	posts := &[]models.Post{}
 	queryWhere :=
-		`SELECT id, user_id, body, datefrom FROM posts
+		`SELECT id, user_id, body, datefrom,
+		(
+			SELECT COUNT(*)
+			FROM comments
+			WHERE posts.id = comments.post_id
+		) AS comments_count FROM posts
 		WHERE id <= ?
 		ORDER BY datefrom DESC
 		LIMIT ?`
 	queryAll :=
-		`SELECT id, user_id, body, datefrom FROM posts
+		`SELECT id, user_id, body, datefrom,
+		(
+			SELECT COUNT(*)
+			FROM comments
+			WHERE posts.id = comments.post_id
+		) AS comments_count FROM posts
 		ORDER BY datefrom DESC
 		LIMIT ?`
 
@@ -78,7 +88,7 @@ func GetNextPosts(db *sql.DB, firstID, limit int) (*[]models.Post, error) {
 
 	for rows.Next() {
 		var post models.Post
-		err := rows.Scan(&post.ID, &post.UserID, &post.Body, &post.Datefrom)
+		err := rows.Scan(&post.ID, &post.UserID, &post.Body, &post.Datefrom, &post.CommentsCount)
 		if err != nil {
 			return nil, err
 		}

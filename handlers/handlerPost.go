@@ -4,6 +4,7 @@ import (
 	"forum/db"
 	"forum/models"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -17,9 +18,16 @@ func (env *env) PostHandler() http.Handler {
 				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 				return
 			}
+			if r.URL.Path == "/post/" {
+				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+				return
+			}
 
-			// page := r.URL.Query().Get("page")
-			// limit := r.URL.Query().Get("limit")
+			postId, err := strconv.Atoi(r.URL.Path[6:])
+			if postId <= 0 || err != nil {
+				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+				return
+			}
 
 		case http.MethodPost:
 

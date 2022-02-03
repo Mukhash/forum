@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"forum/db"
 	"forum/models"
 	"forum/utils"
 	"net/http"
@@ -14,12 +13,8 @@ func (env *env) MainHandler() http.Handler {
 			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		}
-		posts, err := db.GetPosts(env.db)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
 
-		mainpage := models.Mainpage{User: user, Posts: posts}
+		mainpage := models.Mainpage{User: user}
 		utils.RenderTemplate(w, env.tmpl, "index", mainpage)
 	})
 }

@@ -4,7 +4,7 @@
    // const loaderEl = document.querySelector('.loader');
 
     const getQuotes = async (first_id, limit) => {
-        const API_URL = `http://localhost:8080/test_posts?first_id=${first_id}&limit=${limit}`;
+        const API_URL = `http://localhost:8080/next_posts?first_id=${first_id}&limit=${limit}`;
         const response = await fetch(API_URL);
         // handle 404
         if (!response.ok) {
