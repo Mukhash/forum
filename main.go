@@ -35,6 +35,7 @@ func main() {
 	mux.Handle("/login", env.Middleware(env.LogHandler()))
 	mux.Handle("/post/", env.Middleware(env.PostHandler()))
 	mux.Handle("/next_posts", env.NextPostsHandler())
+	mux.Handle("/next_comments", env.NextComments())
 	mux.Handle("/test_index", env.TestIndexHandler())
 	mux.Handle("/comment", env.Middleware(env.CommentHandler()))
 
@@ -42,4 +43,5 @@ func main() {
 	mux.HandleFunc("/reg_sign_on", env.HandleRegSignOn)
 	mux.HandleFunc("/test", env.TestHandler)
 	log.Fatal(http.ListenAndServe(":8080", mux))
+
 }

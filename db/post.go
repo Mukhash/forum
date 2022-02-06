@@ -97,3 +97,19 @@ func GetNextPosts(db *sql.DB, firstID, limit int) (*[]models.Post, error) {
 
 	return posts, err
 }
+
+func GetPost(db *sql.DB, id int) (*models.Post, error) {
+	post := &models.Post{}
+	if err := db.QueryRow(
+		`SELECT	post.id, post.user_id, post.body, post.datefrom,
+		FROM posts
+		WHERE post.id = ?`,
+		id,
+	).Scan(
+		&post.ID, &post.UserID, &post.Body, &post.Datefrom,
+	); err != nil {
+		return nil, err
+	}
+
+	return post, nil
+}

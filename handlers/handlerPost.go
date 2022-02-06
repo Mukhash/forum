@@ -3,6 +3,7 @@ package handlers
 import (
 	"forum/db"
 	"forum/models"
+	"forum/utils"
 	"net/http"
 	"strconv"
 	"time"
@@ -28,6 +29,19 @@ func (env *env) PostHandler() http.Handler {
 				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 				return
 			}
+
+			post, err := db.GetPost(env.db, postId)
+			if err != nil {
+				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+				return
+			}
+
+			postpage := models.Postpage{
+				User: user,
+				Post: post,
+			}
+
+			utils.RenderTemplate(w, env.tmpl, "post", postpage)
 
 		case http.MethodPost:
 

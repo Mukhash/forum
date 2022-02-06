@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"forum/models"
+	"math/rand"
 	"time"
 )
 
@@ -58,6 +59,34 @@ func FillDatabase(db *sql.DB) error {
 			return err
 		}
 
+	}
+
+	comments := []string{
+		"great job!",
+		"yeahh boiii",
+		"you doing good job",
+		"i agree",
+		"i disagree",
+		"you suck",
+		"good morning",
+		"good evening",
+		"good night",
+		"pleaaaase",
+		"nooooooooooooo",
+	}
+
+	for _, v := range comments {
+		comment := models.Comment{
+			PostID:   rand.Intn(3) + 1,
+			UserID:   rand.Intn(2) + 1,
+			Username: "Test Username",
+			Body:     v,
+			Datefrom: time.Now(),
+		}
+		err := InsertComment(db, &comment)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

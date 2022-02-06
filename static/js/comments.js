@@ -1,10 +1,11 @@
 (function () {
 
     const commentsEl = document.querySelector('.comments');
+    const post_id = commentsEl.id
    // const loaderEl = document.querySelector('.loader');
 
-    const getData = async (first_id, limit) => {
-        const API_URL = `http://localhost:8080/next_comments?first_id=${first_id}&limit=${limit}`;
+    const getData = async (post_id, first_id, limit) => {
+        const API_URL = `http://localhost:8080/next_comments?post_id=${post_id}&first_id=${first_id}&limit=${limit}`;
         const response = await fetch(API_URL);
         // handle 404
         if (!response.ok) {
@@ -70,7 +71,7 @@
                 // if having more quotes to fetch
                 if (hasMoreData(firstID)) {
 
-                    const response = await getData(firstID, limit);
+                    const response = await getData(post_id, firstID, limit);
 
                     showData(response.data);
 

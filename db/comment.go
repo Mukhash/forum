@@ -33,7 +33,7 @@ func GetComments(db *sql.DB, post_id, firstID, limit int) (*[]models.Comment, er
 
 	for rows.Next() {
 		comment := models.Comment{}
-		err := rows.Scan(&comment.ID, &comment.UserID, &comment.Body, &comment.Datefrom)
+		err := rows.Scan(&comment.ID, &comment.PostID, &comment.UserID, &comment.Body, &comment.Datefrom)
 		if err != nil {
 			return nil, err
 		}
