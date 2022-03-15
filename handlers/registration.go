@@ -5,8 +5,6 @@ import (
 	"forum/models"
 	"forum/utils"
 	"net/http"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 const insertUserErrorText = "Username or email already exists"
@@ -27,29 +25,32 @@ func (env *env) RegHandler() http.Handler {
 			defer r.Body.Close()
 
 			if err := newUser.InitUser(r); err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-			}
-			if err := newUser.IsValid(); err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				utils.Error(w, env.tmpl, &newUser, http.StatusBadRequest)
+				return
 			}
 
-			hashedPass, _ := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
-			newUser.Password = string(hashedPass)
+			if err := newUser.IsValid(); err != nil {
+				utils.Error(w, env.tmpl, &newUser, http.StatusBadRequest)
+				return
+			}
 
 			if err := db.InsertUser(env.db, &newUser); err != nil {
-				http.Error(w, insertUserErrorText, http.StatusBadRequest)
+				utils.Error(w, env.tmpl, &newUser, http.StatusInternalServerError)
+				return
 			}
 
 			cookie := utils.CreateCookie()
 			if err := db.InsertCookie(env.db, cookie, newUser.ID); err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				utils.Error(w, env.tmpl, &newUser, http.StatusInternalServerError)
+				return
 			}
 
 			http.SetCookie(w, cookie)
 
 			http.Redirect(w, r, "/", http.StatusFound)
 		default:
-			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+			utils.Error(w, env.tmpl, &models.User{Authenticated: false, Name: "Guest"}, http.StatusMethodNotAllowed)
+			return
 		}
 
 	})

@@ -11,7 +11,6 @@ import (
 
 func (env *env) NextPostsHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		firstID, err := strconv.Atoi(r.URL.Query().Get("first_id"))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -30,13 +29,20 @@ func (env *env) NextPostsHandler() http.Handler {
 			return
 		}
 
-		last := (*posts)[len(*posts)-1].ID
+		var last int64
+		if len(*posts) != 0 {
+			last = (*posts)[len(*posts)-1].ID
+		}
+
 		postsFeed := models.PostFeed{Posts: posts, NextFirstId: last - 1}
 		postsJson, err := json.Marshal(postsFeed)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		fmt.Fprintf(w, "%s", string(postsJson))
+		_, err = fmt.Fprintf(w, "%s", string(postsJson))
+		if err != nil {
+			return
+		}
 	})
 }

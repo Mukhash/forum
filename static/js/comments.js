@@ -1,9 +1,8 @@
 (function () {
 
     const commentsEl = document.querySelector('.comments');
-    const post_id = commentsEl.id
+    const postID = commentsEl.id
    // const loaderEl = document.querySelector('.loader');
-
     const getData = async (post_id, first_id, limit) => {
         const API_URL = `http://localhost:8080/next_comments?post_id=${post_id}&first_id=${first_id}&limit=${limit}`;
         const response = await fetch(API_URL);
@@ -29,17 +28,14 @@
 
             <pre>${comment.Body}</pre>
 
-            <form class="comment-rating" action="/like" method="POST">
-                <input name="objType" value="2" type="hidden">
-                <input name="objID" value="" type="hidden">
+            <form class="comment-rating" action="/like_comment" method="POST">
+                <input name="comment_id" value="${comment.ID}" type="hidden">
 
-                <button class="rateButton" type="submit" name="action" value="1" 
-                    style="background-color: #CDF2CA;"> ⮝ </button>
+                <button class="likeButton"type="submit" name="action" value="1"><i class="fa-solid fa-thumbs-up"></i></button>
 
-                <span class="rating"> </span>
+                <span class="rating">${comment.LikesCount}</span>
 
-                <button class="rateButton" type="submit" name="action" value="2"
-                    style="background-color: #FFDEFA;"> ⮟ </button>
+                <button class="dislikeButton" type="submit" name="action" value="2"><i class="fa-solid fa-thumbs-down"></i></button>
             </form>
             `;
 
@@ -56,26 +52,24 @@
     // };
 
     const hasMoreData = (id) => {
-        if (id === 0)
-        return false
-        else
-        return true
+        return id !== 0;
     };
 
-    const loadData = async (limit) => {
+    const loadData = async (post_id, first_id, limit) => {
 
         //showLoader();
 
         setTimeout(async () => {
             try {
                 // if having more quotes to fetch
-                if (hasMoreData(firstID)) {
+                if (hasMoreData(first_id)) {
 
-                    const response = await getData(post_id, firstID, limit);
+                    const response = await getData(post_id, first_id, limit);
 
                     showData(response.data);
 
                     firstID = response.nextFirstId;
+                    console.log(response.nextFirstId);
                 }
             } catch (error) {
                 console.log(error.message);
@@ -99,13 +93,13 @@
 
         if (scrollTop + clientHeight >= scrollHeight - 5 &&
             hasMoreData(firstID)) {
-            loadData(firstID, limit);
+            loadData(postID, firstID, limit);
         }
     }, {
         passive: true
     });
 
     // initialize
-    loadData(firstID, limit);
+    loadData(postID, firstID, limit);
 
 })();

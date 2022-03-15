@@ -20,9 +20,10 @@ func main() {
 
 	database, err := db.ConnectBD()
 	if err != nil {
+		fmt.Println("connect")
 		log.Fatal(err)
 	}
-	db.FillDatabase(database)
+	_ = db.FillDatabase(database)
 	fmt.Println("Connected to database...")
 	env.SetDB(database)
 
@@ -33,15 +34,18 @@ func main() {
 	mux.Handle("/", env.Middleware(env.MainHandler()))
 	mux.Handle("/registration", env.Middleware(env.RegHandler()))
 	mux.Handle("/login", env.Middleware(env.LogHandler()))
+	mux.Handle("/logout", env.Middleware(env.LogoutHandler()))
 	mux.Handle("/post/", env.Middleware(env.PostHandler()))
+	mux.Handle("/comment", env.Middleware(env.CommentHandler()))
+	mux.Handle("/like_post", env.Middleware(env.PostLikeHandler()))
+	mux.Handle("/like_comment", env.Middleware(env.CommentLikeHandler()))
+	mux.Handle("/search", env.Middleware(env.SearchHandler()))
+
 	mux.Handle("/next_posts", env.NextPostsHandler())
 	mux.Handle("/next_comments", env.NextComments())
-	mux.Handle("/test_index", env.TestIndexHandler())
-	mux.Handle("/comment", env.Middleware(env.CommentHandler()))
 
 	mux.HandleFunc("/single_sign_on", env.HandleSignOn)
 	mux.HandleFunc("/reg_sign_on", env.HandleRegSignOn)
-	mux.HandleFunc("/test", env.TestHandler)
-	log.Fatal(http.ListenAndServe(":8080", mux))
 
+	log.Fatal(http.ListenAndServe(":8080", mux))
 }

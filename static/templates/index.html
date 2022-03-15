@@ -7,35 +7,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/navigation.css">
     <link rel="shortcut icon" href="#" />
+    <script src="https://kit.fontawesome.com/6ea2cee216.js" crossorigin="anonymous"></script>
     <title>Forum</title>
 </head>
 
 <body>
     <nav class="navigation-header">
-        <a href="/" id="main-page">
-            <h1>Forum</h1>
-        </a>
-        {{ if not .User.Authenticated }}
-        <a href="/registration" id="login">Sign Up</a>
-        <a href="/login" id="login">Log In</a> {{ else }}
-        <a href="/login" id="login">Log Out</a> {{ end }}
+        <div class="nav-left"></div>
+        <div class="nav-center">
+            <a href="/" id="main-page"><h1>Forum</h1></a>
+            <div class="searchbar">
+                <form action="/search" method="GET">
+                    <input list="searchbar" id="data-choice" name="data-choice" type="search" placeholder="Search Forum" required>
+                    <datalist id="searchbar" autocomplete="off">
+                        <option value="Ukraine" label="Ukraine" name="Ukraine"></option>
+                        <option value="Crypto" label="Crypto" name="Ukraine"></option>
+                    </datalist>
+                    <input type="submit" hidden />
+                </form>
+            </div>
+            {{ if .User.Authenticated }}
+            <div class="filters">
+                <form action="/search" method="GET">
+                    <input name="favs"  value= "favs" type="hidden"/>
+                    <input type="submit" name="favs" value="Favourites"/>
+                </form>
+                <form action="/search" method="GET">
+                    <input name="created" value="created" type="hidden"/>
+                    <input type="submit" name="created" value="My Posts"/>
+                </form>
+            </div>
+            {{ end }}
+            {{ if not .User.Authenticated }}
+            <a class="auth" href="/registration" id="login">Sign Up</a>
+            <a class="auth" href="/login" id="login">Log In</a> {{ else }}
+            <a class="auth" href="/logout" id="logout">Log Out</a> {{ end }}
+        </div>
+        <div class="nav-right">
+            <div class="username">
+                <h2> {{ .User.Name }} </h2>
+            </div>
+        </div>
     </nav>
 
     <div class="feed">
-        <div class="feed-top">
-            <h2> Welcome, {{ .User.Name}}! </h2>
-        </div>
 
         <div class="create-post">
             <form action="/post/" method="POST">
                 <textarea name="body" id="input-post" placeholder="Create post..." required></textarea>
-                <button id="send" type="submit"> Submit </button>
+                <button class="send" id="send" type="submit"> Submit </button>
             </form>
         </div>
 
-        <div class="posts_feed"> 
-            </div>
-        </div>
+        <div class="posts_feed"></div>
     </div>
     <script src="js/app.js"></script>
 </body>

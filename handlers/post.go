@@ -6,6 +6,7 @@ import (
 	"forum/utils"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -14,25 +15,20 @@ func (env *env) PostHandler() http.Handler {
 		user := r.Context().Value(ctxUserKey).(*models.User)
 		switch r.Method {
 		case http.MethodGet:
-
-			if !user.Authenticated {
-				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-				return
-			}
 			if r.URL.Path == "/post/" {
-				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+				utils.Error(w, env.tmpl, user, http.StatusBadRequest)
 				return
 			}
 
 			postId, err := strconv.Atoi(r.URL.Path[6:])
 			if postId <= 0 || err != nil {
-				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+				utils.Error(w, env.tmpl, user, http.StatusNotFound)
 				return
 			}
 
 			post, err := db.GetPost(env.db, postId)
 			if err != nil {
-				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+				utils.Error(w, env.tmpl, user, http.StatusNotFound)
 				return
 			}
 
@@ -44,25 +40,26 @@ func (env *env) PostHandler() http.Handler {
 			utils.RenderTemplate(w, env.tmpl, "post", postpage)
 
 		case http.MethodPost:
-
 			if !user.Authenticated {
-				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+				utils.Error(w, env.tmpl, user, http.StatusUnauthorized)
 				return
 			}
 
 			post := &models.Post{UserID: user.ID, Username: user.Name}
 			body := r.PostFormValue("body")
-			if body == "" {
-				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			if body == "" || strings.TrimSpace(body) == "" {
+				utils.Error(w, env.tmpl, user, http.StatusBadRequest)
+				return
 			}
 			post.Body = body
 			post.Datefrom = time.Now()
 
 			err := db.CreatePost(env.db, post)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				utils.Error(w, env.tmpl, user, http.StatusBadRequest)
+				return
 			}
-			http.Redirect(w, r, "/", http.StatusFound)
+			http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
 		default:
 		}
 	})

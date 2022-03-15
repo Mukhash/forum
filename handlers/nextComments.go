@@ -35,13 +35,21 @@ func (env *env) NextComments() http.Handler {
 			return
 		}
 
-		last := (*comments)[len(*comments)-1].ID
-		commentsFeed := models.CommentFeed{Comments: comments, NextFirstId: int64(last)}
+		last := 1
+		if len(*comments) != 0 {
+			last = (*comments)[len(*comments)-1].ID
+		}
+
+		commentsFeed := models.CommentFeed{Comments: comments, NextFirstId: int64(last - 1)}
 		commentsJson, err := json.Marshal(commentsFeed)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		fmt.Fprintf(w, "%s", string(commentsJson))
+		_, err = fmt.Fprintf(w, "%s", string(commentsJson))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	})
 }

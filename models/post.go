@@ -8,8 +8,10 @@ type Post struct {
 	Username      string
 	Body          string
 	Datefrom      time.Time
+	LikeType      int
 	LikesCount    int
 	CommentsCount int
+	Tag           Tag
 }
 
 type PostFeed struct {

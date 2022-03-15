@@ -9,8 +9,8 @@ import (
 func (env *env) MainHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user := r.Context().Value(ctxUserKey).(*models.User)
-		if !user.Authenticated {
-			http.Redirect(w, r, "/login", http.StatusFound)
+		if r.URL.Path != "/" {
+			utils.Error(w, env.tmpl, user, http.StatusNotFound)
 			return
 		}
 

@@ -39,32 +39,49 @@ func getQuery() []string {
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
 			"post_id"	INTEGER,
 			"user_id"	INTEGER,
+			"username" TEXT,
 			"body"	TEXT,
 			"datefrom"	DATETIME,
 			FOREIGN KEY ("post_id") REFERENCES posts ("id") ON DELETE CASCADE
 			FOREIGN KEY ("user_id") REFERENCES users ("id") ON DELETE CASCADE
 		)`,
 
-		`CREATE TABLE  IF NOT EXISTS "rate_type" (
+		`CREATE TABLE  IF NOT EXISTS "like_types" (
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
 			"name"	TEXT UNIQUE
 		)`,
 
-		`CREATE TABLE IF NOT EXISTS "obj_type" (
+		`CREATE TABLE  IF NOT EXISTS "post_likes" (
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
-			"name"	TEXT UNIQUE
+			"like_type"	INTEGER,
+			"user_id"	INTEGER,
+			"post_id"	INTEGER,
+			FOREIGN KEY ("user_id") REFERENCES users ("id") ON DELETE CASCADE
+			FOREIGN KEY ("like_type") REFERENCES like_types ("id")
+			FOREIGN KEY ("post_id") REFERENCES posts ("id") ON DELETE CASCADE
+			UNIQUE ("like_type","user_id","post_id")
 		)`,
-
-		`CREATE TABLE  IF NOT EXISTS "rates" (
+		`CREATE TABLE  IF NOT EXISTS "comment_likes" (
 			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
-			"rate_type"	INTEGER,
-			"obj_type"	INTEGER,
-			"uid"	INTEGER,
-			"obj_id"	INTEGER,
-			FOREIGN KEY ("uid") REFERENCES users ("id") ON DELETE CASCADE
-			FOREIGN KEY ("rate_type") REFERENCES rate_type ("id")
-			FOREIGN KEY ("obj_type") REFERENCES obj_type ("id")
-			UNIQUE ("rate_type","obj_type","uid","obj_id")
+			"like_type"	INTEGER,
+			"user_id"	INTEGER,
+			"comment_id"	INTEGER,
+			FOREIGN KEY ("user_id") REFERENCES users ("id") ON DELETE CASCADE
+			FOREIGN KEY ("like_type") REFERENCES like_types ("id")
+			FOREIGN KEY ("comment_id") REFERENCES comments ("id") ON DELETE CASCADE
+			UNIQUE ("like_type","user_id","comment_id")
+		)`,
+		`CREATE TABLE IF NOT EXISTS "tags" (
+			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
+			"title"	TEXT UNIQUE
+		)`,
+		`CREATE TABLE  IF NOT EXISTS "post_tag" (
+			"id"	INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
+			"post_id"	INTEGER,
+			"tag_id"	INTEGER,
+			FOREIGN KEY ("post_id") REFERENCES posts ("id") ON DELETE CASCADE
+			FOREIGN KEY ("tag_id") REFERENCES tags ("id") ON DELETE CASCADE
+			UNIQUE ("post_id", "tag_id")
 		)`,
 	}
 }

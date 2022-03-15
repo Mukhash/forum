@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/navigation.css">
-    <script src="https://kit.fontawesome.com/6ea2cee216.js" crossorigin="anonymous"></script>
     <link rel="shortcut icon" href="#" />
-
+    <script src="https://kit.fontawesome.com/6ea2cee216.js" crossorigin="anonymous"></script>
     <title>Forum</title>
 </head>
 
@@ -50,54 +49,52 @@
             </div>
         </div>
     </nav>
+<div class="feed">
 
-    <div class="feed">
-        <div class="post">
+    <div class="create-post">
+        <form action="/post/" method="POST">
+            <textarea name="body" id="input-post" placeholder="Create post..." required></textarea>
+            <button class="send" id="send" type="submit"> Submit </button>
+        </form>
+    </div>
+
+    {{ range .Posts }}
+    <a href="post/{{ .ID }}">
+        <div class="post" id="{{.ID}}">
+
             <div class="post-header">
-            <div>
-                <span> <b> {{ .Post.Username }} </b></span>
-            </div>
-                <time> {{ .Post.Datefrom.Format "02-Jan 15:04" }}</time>
+                <div>
+                    <span> <b>{{ .Username }} </b></span>
+                </div>
+                <time>{{ .Datefrom.Format "02-Jan 15:04" }}</time>
             </div>
 
-            <pre>{{ .Post.Body }}</pre>
+            <pre>{{ .Body }}</pre>
 
             <div class="post-bottom">
+
                 <div>
                     <span style="color: #518fa1;"><i class="fa-solid fa-comments"></i> </span>
-                    <span> {{ .Post.CommentsCount }} </span>
+                    <span> {{ .CommentsCount }} </span>
                 </div>
 
                 <form class="post-rating" action="/like_post" method="POST">
-                    <input name="post_id" value="{{ .Post.ID }}" type="hidden">
+                    <input name="objType" value="1" type="hidden">
+                    <input name="post_id" value="{{ .ID }}" type="hidden">
 
-                    <button class="likeButton" type="submit" name="action" value="1"> <i class="fa-solid fa-thumbs-up"></i>
-                    </button>
+                    <button class="likeButton" type="submit" name="action" value="1"><i class="fa-solid fa-thumbs-up"></i></button>
 
-                    <span class="rating"> {{ .Post.LikesCount }} </span>
+                    <span class="rating"> {{ .LikesCount }} </span>
 
-                    <button class="dislikeButton" type="submit" name="action" value="2"><i class="fa-solid fa-thumbs-down"></i>
-                    </button>
+                    <button class="dislikeButton" type="submit" name="action" value="2"><i class="fa-solid fa-thumbs-down"></i></button>
                 </form>
 
             </div>
         </div>
-
-        <div class="create-comment">
-            <form action="/comment" method="POST">
-                <textarea name="body" id="input-comment" placeholder="Create comment..." required></textarea>
-                <input name="post_id" value="{{ .Post.ID }}" type="hidden">
-                <p>
-                    <button class="send" id="send" type="submit"> Reply </button>
-                </p>
-            </form>
-        </div>
-
-        <div class="comments" id="{{ .Post.ID }}">
-        </div>
-
-    </div>
-    <script src="../js/comments.js"></script>
+    </a>
+    {{ end }}
+</div>
+</div>
 </body>
 
 </html>

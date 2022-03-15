@@ -39,11 +39,11 @@ func DeleteUserByID(db *sql.DB, id string) error {
 
 func FindUserBySession(db *sql.DB, cookieValue string) (*models.User, error) {
 	query :=
-		`select users.id, users.name
-	from users
-	left join auth_sessions as auth
-	on users.id = auth.user_id
-	where auth.cookie_value = ?`
+		`SELECT users.id, users.name
+	FROM users
+	LEFT JOIN auth_sessions AS auth
+	ON users.id = auth.user_id
+	WHERE auth.cookie_value = ?`
 
 	user := models.User{Authenticated: true}
 
@@ -60,12 +60,13 @@ func FindUserBySession(db *sql.DB, cookieValue string) (*models.User, error) {
 
 func FindUserByEmail(db *sql.DB, email string, password string) (*models.User, error) {
 	user := &models.User{}
-	query := "select id, name, password from users where email = ?"
-	err := db.QueryRow(query, email).Scan(&user.ID, &user.Name, &user.Password)
+	var hashedPass string
+	query := "SELECT id, name, password FROM users WHERE email = ?"
+	err := db.QueryRow(query, email).Scan(&user.ID, &user.Name, &hashedPass)
 	if err != nil {
 		return nil, err
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPass), []byte(password))
 	return user, err
 }

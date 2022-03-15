@@ -2,17 +2,21 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Helvetica;
 }
 
 body {
-    background-color: #dae0e6;
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
 }
 
 h1 {
     margin: 10px;
+}
+
+h2 {
+    font-size: larger;
 }
 
 a {
@@ -32,7 +36,7 @@ label {
 pre {
     font-size: 18px;
     margin-bottom: 10px;
-    font-family: Calibri;
+    font-family: Helvetica;
     white-space: pre-wrap;       /* css-3 */
     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
     white-space: -pre-wrap;      /* Opera 4-6 */
@@ -50,10 +54,41 @@ select {
 }
 
 textarea {
-    border: 1px solid rgb(241, 239, 239);
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    border: none;
+    border-right: 1px solid rgb(222,222,222);
+    width: 700px;
+    height: 80px;
+    margin-bottom: 5px;
+    padding: 5px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    outline: none;
+    text-indent: 2%;
+    font-size: larger;
 }
 
+.nav-center {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 56%;
+    max-width: 700px;
+    border-left: 1px solid rgb(222,222,222);
+    border-right: 1px solid rgb(222,222,222);
+}
+.nav-left {
+    width: 22%;
+    flex:1;
+}
+.nav-right {
+    display: flex;
+    width: 22%;
+    flex:1;
+    justify-content: start;
+}
 
 .navigation-header {
     background-color: white;
@@ -61,29 +96,45 @@ textarea {
     top: 0;
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgb(222,222,222);
+}
+
+.auth {
+    margin-right: 10px;
 }
 
 .feed {
     align-self: center;
-    width: 800px;
+    width: 700px;
 }
 
-.feed-top {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+.username {
+    margin-left: 20px;
+}
+
+.create-post {
+    box-sizing: border-box;
+    padding-bottom: 20px;
+    border-left: 1px solid rgb(222,222,222);
+    border-right: 1px solid rgb(222,222,222);
+    border-bottom: 1px solid rgb(222,222,222);
+}
+
+.create-comment {
+    border-left: 1px solid rgb(222,222,222);
+    border-right: 1px solid rgb(222,222,222);
+    border-bottom: 1px solid rgb(222,222,222);
 }
 
 .post {
     background-color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 5px;
-    margin-top: 20px;
+    border-bottom: 1px solid rgb(222,222,222);
+    border-left: 1px solid rgb(222,222,222);
+    border-right: 1px solid rgb(222,222,222);
     padding: 20px;
+}
+.post:hover {
+    background-color: rgb(244,244,244);
 }
 
 .post-bottom, .post-rating  {
@@ -124,7 +175,11 @@ textarea {
     font-size: 14px;
 }
 
-button.rateButton {
+button.send {
+    margin-left: 20px;
+}
+
+/* button.rateButton {
     border: none;
     background-color: #dae0e64b;
     border-radius: 5px;
@@ -138,23 +193,46 @@ button.rateButton {
 button.rateButton:hover {
    cursor: pointer;
    transform: scale(1.2);
-}
+} */
 
+.likeButton {
+    background: transparent;
+    border: none; /* Remove borders */
+    color: lightseagreen; /* White text */
+    /* padding: 12px 16px; Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+  }
+  
+  /* Darker background on mouse-over */
+  .likeButton:hover {
+    color: lightgreen;
+  }
+
+
+  .dislikeButton {
+    background: transparent;
+    border: none; /* Remove borders */
+    color: lightcoral; /* White text */
+    /* padding: 12px 16px; Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+  }
+  
+  /* Darker background on mouse-over */
+  .dislikeButton:hover {
+    color: red;
+  }
 .comments {
-    margin-top: 40px;
     background-color: white;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    border-radius: 5px;
-    padding: 20px;
 }
 
 .comment {
-    border: dotted 1px grey;
-    background-color: #f4f6f8;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    padding: 10px;
-    margin-top: 20px;
+    border-bottom: 1px solid rgb(222,222,222);
+    border-left: 1px solid rgb(222,222,222);
+    border-right: 1px solid rgb(222,222,222);
+    background-color: white;
+    padding: 20px;
 }
 
 .login-card {
@@ -184,15 +262,8 @@ button.rateButton:hover {
 
 #input-post, #input-comment {
     resize: none;
-    width: 792px;
     height: 60px;
-    border-radius: 5px;
     margin-top: 20px;
-    transition: transform 0.3s;
-}
-
-#input-post:hover, #input-comment:hover {
-    transform: scale(1.2);
 }
 
 #login {
@@ -206,24 +277,23 @@ button.rateButton:hover {
     font-size: inherit;
 }
 
-@media screen and (max-width: 1000px) {
-    #input-post:hover, #input-comment:hover {
-        transform: scale(1.0);
-    }
-}
-
 @media screen and (max-width: 800px) {
     .feed {
         width: 375px;
     }
-
-    .categories {
-        display: flex;
-        flex-direction: column-reverse;
-        height: 65px;
+    .nav-center {
+        width: 70%;
     }
-
+    .nav-left {
+        width: 15%;
+    }
+    .nav-right {
+        width: 15%;
+    }
+    textarea {
+        width: 370px;
+    }
     #input-post,  #input-comment {
-        width: 368px;
+        width: 375px;
     }
 }

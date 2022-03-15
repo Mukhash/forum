@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"forum/db"
 	"forum/models"
 	"forum/utils"
@@ -23,26 +22,33 @@ func (env *env) LogHandler() http.Handler {
 			login := r.PostFormValue("username")
 
 			if pass == "" || login == "" {
-				http.Error(w, "No pass or login", http.StatusBadRequest)
+				utils.Error(w, env.tmpl, user, http.StatusBadRequest)
+				return
 			}
 
 			user, err := db.FindUserByEmail(env.db, login, pass)
-			fmt.Println(err)
 			if err != nil {
-				http.Error(w, "Incorrect username or password", http.StatusUnauthorized)
+				user = &models.User{Name: "Guest"}
+				utils.Error(w, env.tmpl, user, http.StatusUnauthorized)
 				return
 			}
 
 			cookie := utils.CreateCookie()
+			if err = db.DeleteUserSession(env.db, user.ID); err != nil {
+				utils.Error(w, env.tmpl, user, http.StatusInternalServerError)
+				return
+			}
 			if err = db.InsertCookie(env.db, cookie, user.ID); err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				utils.Error(w, env.tmpl, user, http.StatusInternalServerError)
+				return
 			}
 
 			http.SetCookie(w, cookie)
 
 			http.Redirect(w, r, "/", http.StatusFound)
 		default:
-			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+			utils.Error(w, env.tmpl, user, http.StatusMethodNotAllowed)
+			return
 		}
 	})
 }

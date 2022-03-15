@@ -11,7 +11,7 @@ import (
 func FillDatabase(db *sql.DB) error {
 	users := [][]string{
 		{
-			"talgat.mukhash@gmail.com",
+			"tm@gmail.com",
 			"Talgat",
 			"qwerty",
 		},
@@ -36,23 +36,22 @@ func FillDatabase(db *sql.DB) error {
 	}
 
 	texts := []string{
-		"lorem ipsum",
-		"Dossan mal",
+		"lorem ipsum #1",
+		"Alem Cup",
 		"Curiosity killed the cat",
 		"Поехали",
 		"L is Kira",
-		"Fuck Alem",
-		"I want to work in Moscow",
-		"Let's go Ozon",
-		"Let's go Technodom",
+		"Hello World",
+		"I want to work in Nasa",
+		"Let's go GO",
+		"Let's go Ruby",
 	}
 
 	for _, v := range texts {
 		post := &models.Post{
-			UserID:        1,
-			Body:          v,
-			Datefrom:      time.Now(),
-			CommentsCount: 15,
+			UserID:   rand.Intn(2) + 1,
+			Body:     v,
+			Datefrom: time.Now(),
 		}
 		err := CreatePost(db, post)
 		if err != nil {
@@ -88,5 +87,6 @@ func FillDatabase(db *sql.DB) error {
 			return err
 		}
 	}
+
 	return nil
 }

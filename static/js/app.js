@@ -3,6 +3,8 @@
     const postsEl = document.querySelector('.posts_feed');
    // const loaderEl = document.querySelector('.loader');
 
+
+
     const getQuotes = async (first_id, limit) => {
         const API_URL = `http://localhost:8080/next_posts?first_id=${first_id}&limit=${limit}`;
         const response = await fetch(API_URL);
@@ -32,25 +34,24 @@
                 <div class="post-bottom">
 
                     <div>
-                        <span style="color: #518fa1;"> 🗩 </span>
+                        <span style="color: #518fa1;"><i class="fa-solid fa-comments"></i></span>
                         <span> ${post.CommentsCount} </span>
                     </div>
 
-                    <form class="post-rating" action="/like" method="POST">
-                        <input name="objType" value="1" type="hidden">
-                        <input name="objID" value="${post.ID}" type="hidden">
-
-                        <button class="rateButton" type="submit" name="action" value="1" style="background-color: #CDF2CA;"> ⮝
+                    <form class="post-rating" action="/like_post" method="post">
+                        <input name="post_id" value="${post.ID}" type="hidden">
+                        <button class="likeButton" type="submit" name="action" value="1"><i class="fa-solid fa-thumbs-up"></i>
                         </button>
 
                         <span class="rating"> ${post.LikesCount} </span>
 
-                        <button class="rateButton" type="submit" name="action" value="2"style="background-color: #FFDEFA;"> ⮟
+                        <button class="dislikeButton" type="submit" name="action" value="2"><i class="fa-solid fa-thumbs-down"></i>
                         </button>
                     </form>
                 </div>
             </div>
             `;
+            postEl.st
 
             postsEl.appendChild(postEl);
         });
@@ -65,26 +66,24 @@
     // };
 
     const hasMoreQuotes = (id) => {
-        if (id === 0)
-        return false
-        else
-        return true
+        return id !== 0;
     };
 
-    const loadQuotes = async (limit) => {
+    const loadQuotes = async (first_id, limit) => {
 
         //showLoader();
 
         setTimeout(async () => {
             try {
                 // if having more quotes to fetch
-                if (hasMoreQuotes(firstID)) {
+                if (hasMoreQuotes(first_id)) {
 
-                    const response = await getQuotes(firstID, limit);
+                    const response = await getQuotes(first_id, limit);
 
                     showQuotes(response.data);
 
                     firstID = response.nextFirstId;
+                    console.log(response.nextFirstId);
                 }
             } catch (error) {
                 console.log(error.message);
