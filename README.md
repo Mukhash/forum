@@ -1,3 +1,9 @@
+## Categories implementation
+You can create your own categories ('tags') by typing "#" to start a tag.
+For example "...#alem!", in this case "alem" tag is created.
+You can filter tags in searchbar at the top of the page. 
+
+
 ## forum
 
 ### Objectives

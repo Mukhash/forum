@@ -15,11 +15,11 @@
         <form method="POST" action="/registration">
             <div class="login-card-elements">
                 <p>email</p>
-                <input type="email" name="email">
+                <input type="email" name="email" required>
                 <p>username</p>
-                <input name="username">
+                <input name="username" required>
                 <p>password</p>
-                <input type="password" name="password">
+                <input type="password" name="password" required minlength="6">
                 <p>
                     <input id="send" value="Sign up" type="submit"></input>
                 </p>

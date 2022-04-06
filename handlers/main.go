@@ -13,6 +13,10 @@ func (env *env) MainHandler() http.Handler {
 			utils.Error(w, env.tmpl, user, http.StatusNotFound)
 			return
 		}
+		if r.Method != http.MethodGet {
+			utils.Error(w, env.tmpl, user, http.StatusMethodNotAllowed)
+			return
+		}
 
 		mainpage := models.Mainpage{User: user}
 		utils.RenderTemplate(w, env.tmpl, "index", mainpage)

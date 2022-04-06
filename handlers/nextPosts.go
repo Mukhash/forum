@@ -5,12 +5,17 @@ import (
 	"fmt"
 	"forum/db"
 	"forum/models"
+	"forum/utils"
 	"net/http"
 	"strconv"
 )
 
 func (env *env) NextPostsHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			utils.Error(w, env.tmpl, &models.User{}, http.StatusMethodNotAllowed)
+			return
+		}
 		firstID, err := strconv.Atoi(r.URL.Query().Get("first_id"))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)

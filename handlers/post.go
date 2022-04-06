@@ -61,6 +61,8 @@ func (env *env) PostHandler() http.Handler {
 			}
 			http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
 		default:
+			utils.Error(w, env.tmpl, user, http.StatusMethodNotAllowed)
+			return
 		}
 	})
 }

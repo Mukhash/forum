@@ -1,35 +1,30 @@
-.PHONY: build
-
 build:
 	go build -o main .
 
-.PHONY: docker
-
 docker:
-	@echo "Building Docker Image:"
+	@echo "Docker image build:"
 	docker image build -f Dockerfile -t forum-image .
 	@echo
 
-	@echo "List of images:"
+	@echo "Docker images:"
 	docker images
 	@echo
 
-	@echo "Initiating Container:"
+	@echo "Container run:"
 	docker container run -t -p 8080:8080 --detach --name forum-container forum-image
 	@echo
 
-	@echo "Running server:"
+	@echo "Server run:"
 	docker exec -it forum-container ./main
 	@echo
 
-.PHONY: clean
-
-clean:
-	@echo "Stopping container:"
+stop:
+	@echo "Container stop:"
 	docker stop forum-container
 	@echo
 
-	@echo "Removing container:"
+clean:
+	@echo "Container remove:"
 	docker rm forum-container
 	@echo
 
@@ -43,6 +38,6 @@ clean:
 	docker images
 	@echo
 
-	rm -rf main
+	rm main
 
 .DEFAULT_GOAL := build

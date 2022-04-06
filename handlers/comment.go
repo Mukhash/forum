@@ -45,7 +45,7 @@ func (env *env) CommentHandler() http.Handler {
 			}
 
 			http.Redirect(w, r, r.Header.Get("Referer"), http.StatusFound)
-		case http.MethodGet:
+		default:
 			utils.Error(w, env.tmpl, user, http.StatusMethodNotAllowed)
 			return
 		}

@@ -30,12 +30,16 @@ func (env *env) RegHandler() http.Handler {
 			}
 
 			if err := newUser.IsValid(); err != nil {
-				utils.Error(w, env.tmpl, &newUser, http.StatusBadRequest)
+				w.WriteHeader(http.StatusBadRequest)
+				errPage := models.Err{Text: err.Error(), User: &newUser}
+				utils.RenderTemplate(w, env.tmpl, "error", errPage)
 				return
 			}
 
 			if err := db.InsertUser(env.db, &newUser); err != nil {
-				utils.Error(w, env.tmpl, &newUser, http.StatusInternalServerError)
+				w.WriteHeader(http.StatusBadRequest)
+				errPage := models.Err{Text: insertUserErrorText, User: &newUser}
+				utils.RenderTemplate(w, env.tmpl, "error", errPage)
 				return
 			}
 
@@ -52,6 +56,5 @@ func (env *env) RegHandler() http.Handler {
 			utils.Error(w, env.tmpl, &models.User{Authenticated: false, Name: "Guest"}, http.StatusMethodNotAllowed)
 			return
 		}
-
 	})
 }

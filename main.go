@@ -47,5 +47,7 @@ func main() {
 	mux.HandleFunc("/single_sign_on", env.HandleSignOn)
 	mux.HandleFunc("/reg_sign_on", env.HandleRegSignOn)
 
+	fmt.Println("listening at port 8080...")
 	log.Fatal(http.ListenAndServe(":8080", mux))
+
 }
